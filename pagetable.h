@@ -57,7 +57,7 @@ PageTable::PageTable(long long int log_memSize,long long int phy_memSize)
     emptyFrames.push_back(i);
  }
  pgMap.resize(log_memSize);
- ts=0;                             //intially timestamp must be 0
+ ts=1;                             //intially timestamp must be 0
 }
 
 //To check whether a page is present in physical memory
@@ -83,9 +83,10 @@ void PageTable::accessPg(long long int pgNum,int choice)
    }
  }
 
- cout<<"The page "<<pgNum<<" was found at frame "<<frame<<" in physical memory\n\n";
  pgMap[pgNum].timeStamp=ts;
+ displayPageTable();
  ++ts;
+ cout<<"The page "<<pgNum<<" was found at frame "<<frame<<" in physical memory\n\n";
 }
 
 //To add this page in physical memory
@@ -100,7 +101,7 @@ void PageTable::addPg(long long int pgNum,int choice)
    pgMap[pgNum].frameNo=frame;
    pgMap[pgNum].checkFrame=1;
    pgMap[pgNum].timeStamp=ts;
-   cout<<"time "<<ts<<"\n";
+   //cout<<"time "<<ts<<"\n";
    cout<<"Page Fault: Adding "<<pgNum<<" at frame "<<frame<<"\n";
  }
  /*if there are no empty frames in physical memory, then swap a page present in Physical
@@ -111,13 +112,13 @@ void PageTable::addPg(long long int pgNum,int choice)
    pgMap[pgNum].frameNo=frame;
    pgMap[pgNum].checkFrame=1;
    pgMap[pgNum].timeStamp=ts;
-   cout<<"time "<<ts<<"\n";
+   //cout<<"time "<<ts<<"\n";
    cout<<"Page Fault: Adding "<<pgNum<<" at frame "<<frame<<"\n";
  }
  ++pgFaults;
  fifo_framePgs.push_back(pgNum);
  lfu_framePgs.push_back(make_pair(pgNum,1));
- displayPageTable();
+
 }
 
 /*use different page replacement algorithm depending on the choice entered by
@@ -127,7 +128,6 @@ long long int PageTable::pgReplace(int choice)
 
  if(choice==1)         //Least Recently Used
  {
-   cout<<"time "<<ts<<"\n";
    long long int min=ts;
    long long int replacePg;
    for(long long int j=0;j<pgMap.size();j++)
